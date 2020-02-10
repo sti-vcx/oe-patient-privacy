@@ -8,14 +8,8 @@
             "email": "ken@mi-squared.com"
         }
     ],
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/mi-squared/mini-framework.git"
-        }
-    ],
     "require": {
-        "mi-squared/mini-framework": "dev-master",
+        "mi-squared/mi-framework": "dev-master",
         "openemr/oe-module-installer-plugin": "^0.1.0"
     },
     "autoload": {
