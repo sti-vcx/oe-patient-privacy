@@ -1,0 +1,53 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "4736480466931bd22a9481168bfe6e43",
+    "packages": [
+        {
+            "name": "mi-squared/mini-framework",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mi-squared/mini-framework.git",
+                "reference": "f4492067f21e6e6c3ce88c105625a33e1da6daff"
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Mi2\\Framework": "src/",
+                    "Mi2\\DataTable": "src/",
+                    "Mi2\\Utils": "src/"
+                },
+                "classmap": []
+            },
+            "authors": [
+                {
+                    "name": "Ken Chapple",
+                    "email": "ken@mi-squared.com"
+                }
+            ],
+            "description": "A simple mvc framework",
+            "homepage": "https://mi-squared.com",
+            "keywords": [
+                "openemr"
+            ],
+            "time": "2020-01-23T17:42:15+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "mi-squared/mini-framework": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
