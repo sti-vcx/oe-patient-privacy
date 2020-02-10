@@ -391,7 +391,7 @@ use OpenEMR\OeUI\OemrUI;
 
             var formData = $("#attach-provider-to-supervisor-form").serialize();
 
-            $.post('/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!attach_provider_to_supervisors',
+            $.post('<?php echo $this->baseUrl(); ?>/index.php?action=admin!attach_provider_to_supervisors',
                 formData, function (response) {
 
                     alert("Successfully Saved");
@@ -448,7 +448,7 @@ use OpenEMR\OeUI\OemrUI;
                     supervisor_id: supervisor_id
                 };
 
-                $.post('/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!detach_provider_from_supervisor',
+                $.post('<?php echo $this->baseUrl(); ?>/index.php?action=admin!detach_provider_from_supervisor',
                     post_data, function (response) {
                         // The provider-supervisor relationship was successfully detached, so remove the row
                         tr.remove().slow();
@@ -471,7 +471,7 @@ use OpenEMR\OeUI\OemrUI;
             // perform AJAX request to get the supervisors who have access to this patient
             $.ajax({
                 method: "POST",
-                url: "/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!fetch_supervisors_for_patient",
+                url: "<?php echo $this->baseUrl(); ?>/index.php?action=admin!fetch_supervisors_for_patient",
                 data: {pid: last_clicked_pid}
             }).done(function (response) {
                 var supervisor_obj = JSON.parse(response);
@@ -499,7 +499,7 @@ use OpenEMR\OeUI\OemrUI;
             // perform an AJAX request to get the providers that have access to this patient
             $.ajax({
                 method: "POST",
-                url: "/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!fetch_providers_for_patient",
+                url: "<?php echo $this->baseUrl(); ?>/index.php?action=admin!fetch_providers_for_patient",
                 data: {pid: last_clicked_pid}
             }).done(function (response) {
 
@@ -565,7 +565,7 @@ use OpenEMR\OeUI\OemrUI;
             // perform an AJAX request to get the providers that have access to this patient
             $.ajax({
                 method: "POST",
-                url: "/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!fetch_patient",
+                url: "<?php echo $this->baseUrl(); ?>/index.php?action=admin!fetch_patient",
                 data: { pid: last_clicked_pid }
             }).done(function(response) {
                 var patient_obj = JSON.parse(response);
@@ -580,7 +580,7 @@ use OpenEMR\OeUI\OemrUI;
             e.stopPropagation();
             e.preventDefault();
             var formData = $("#attach-patient-to-provider-form").serialize();
-            $.post('/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!attach_patient_to_provider',
+            $.post('<?php echo $this->baseUrl(); ?>/index.php?action=admin!attach_patient_to_provider',
                 formData, function (response) {
 
                     alert("Successfully Saved");
@@ -598,7 +598,7 @@ use OpenEMR\OeUI\OemrUI;
             e.stopPropagation();
             e.preventDefault();
             var formData = $("#patient-privacy-form").serialize();
-            $.post('/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!attach_providers_to_supervisors',
+            $.post('<?php echo $this->baseUrl(); ?>/index.php?action=admin!attach_providers_to_supervisors',
                 formData, function (response) {
 
                 // We need to reload the provider/supervisor relationships in case any providers were removed.
@@ -621,7 +621,7 @@ use OpenEMR\OeUI\OemrUI;
             datumTokenizer: Bloodhound.tokenizers.whitespace,
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
-                url: '/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!patient_search&query=%QUERY',
+                url: '<?php echo $this->baseUrl(); ?>/index.php?action=admin!patient_search&query=%QUERY',
                 wildcard: '%QUERY'
             }
         });
