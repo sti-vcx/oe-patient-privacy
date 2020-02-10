@@ -313,7 +313,7 @@ use OpenEMR\OeUI\OemrUI;
             "processing": true,
             "serverSide": true,
             "ajax" : {
-               "url": "/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!patient_data",
+               "url": "<?php echo $this->baseUrl(); ?>/index.php?action=admin!patient_data",
                 "data": function(d) {
                    // Pass the provider_filter value as a request parameter for server-side filtering
                    d.provider_filter = $("#filter-by-provider").val();
@@ -331,7 +331,7 @@ use OpenEMR\OeUI\OemrUI;
         var provider_table = $('#<?php echo $this->providerDataTable->getTableId(); ?>').DataTable({
             "processing": true,
             "serverSide": true,
-            "ajax" : "/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!provider_data",
+            "ajax" : "<?php echo $this->baseUrl(); ?>/index.php?action=admin!provider_data",
             "columns": <?php echo $this->providerDataTable->getColumnJson(); ?>
         });
 
@@ -354,7 +354,7 @@ use OpenEMR\OeUI\OemrUI;
             // when the provider-supervisor modal pops up, set the name of the provider
             $.ajax({
                 method: "POST",
-                url: "/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!fetch_provider",
+                url: "<?php echo $this->baseUrl(); ?>/index.php?action=admin!fetch_provider",
                 data: { provider_id: last_clicked_provider_id }
             }).done(function (response) {
                 var obj = JSON.parse(response);
@@ -364,7 +364,7 @@ use OpenEMR\OeUI\OemrUI;
             // perform an AJAX request to get the providers that have access to this patient
             $.ajax({
                 method: "POST",
-                url: "/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!fetch_supervisors_for_provider",
+                url: "<?php echo $this->baseUrl(); ?>/index.php?action=admin!fetch_supervisors_for_provider",
                 data: { provider_id: last_clicked_provider_id }
             }).done(function (response) {
 
