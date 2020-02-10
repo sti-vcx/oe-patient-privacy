@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "mi-squared/mi-framework": "dev-master",
+        "mi-squared/mi-framework": "^0.1.0",
         "openemr/oe-module-installer-plugin": "^0.1.0"
     },
     "autoload": {
