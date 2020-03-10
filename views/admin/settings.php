@@ -75,7 +75,8 @@ use OpenEMR\OeUI\OemrUI;
 
     <ul id="tabs" class="nav nav-tabs">
         <li role="presentation" class="active"><a id="patient-tab" data-toggle="tab" href="#patients">Patients</a></li>
-        <li role="presentation"><a id="provider-tab" data-toggle="tab" href="#providers">Providers</a></li>
+        <li role="presentation"><a id="provider-tab" data-toggle="tab" href="#providers">Users</a></li>
+        <li role="presentation"><a id="roles-tab" data-toggle="tab" href="#roles">Roles</a></li>
     </ul>
 
     <!-- Tab panes -->
@@ -137,6 +138,7 @@ use OpenEMR\OeUI\OemrUI;
                         <th>Last Name</th>
                         <th>First Name</th>
                         <th>Username</th>
+                        <th>Role</th>
                     </tr>
                     </thead>
                     <tfoot>
@@ -145,9 +147,31 @@ use OpenEMR\OeUI\OemrUI;
                         <th>Last Name</th>
                         <th>First Name</th>
                         <th>Username</th>
+                        <th>Role</th>
                     </tr>
                     </tfoot>
                 </table>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="roles">
+            <div class="row">
+
+                <br>
+                <form id="roles-form">
+                    <div class="form-group">
+                        <label for="roles">Roles Excluded From Patient Privacy (can see all patients)</label>
+                        <select multiple name="roles[]" size="10" id="role-select" class="form-control">
+                            <?php foreach ($this->roles as $role) { ?>
+                            <option value="<?php echo $role->id; ?>" <?php echo ($role->excluded) ? "selected" : ""; ?>><?php echo $role->title; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button id="save-excluded-roles-button" class="btn btn-prinary"><?php echo xlt('Save'); ?></button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -612,6 +636,16 @@ use OpenEMR\OeUI\OemrUI;
         });
 
 
+        // On roles tab, detect when the options change
+        $("#save-excluded-roles-button").click(function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var formData = $("#roles-form").serialize();
+            $.post('<?php echo $this->baseUrl(); ?>/index.php?action=admin!set_excluded_roles',
+                formData, function (response) {
+                    alert("Successfully Saved");
+                });
+        });
        // $("#patient-dob").mask("00/00/0000");
        //  $(".tt-suggestion").on('click', function() {
        //      $(".tt-menu").hide();

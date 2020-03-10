@@ -15,8 +15,8 @@ class PatientPrivacyFilter
         // We look in the users-patient table, but we also have to see if this user
         // is a supervisor, and we also show all of the patients under the "supervised" user as well.
 
-        // First, we check if this user is an admin. If so, it's all good!
-        if (UserService::isAdmin($userId)) {
+        // First, we check if this user is excluded from privacy rules. If so, it's all good!
+        if (UserService::isExcluded($userId)) {
 
             $this->boundValues = [];
             $this->filterClause = "1";

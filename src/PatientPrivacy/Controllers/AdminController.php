@@ -87,6 +87,7 @@ class AdminController extends AbstractController
         $this->view->patientDataTable = PatientPrivacyService::makePatientDataTable();
         $this->view->providerDataTable = PatientPrivacyService::makeProviderDataTable();
         $this->view->providers = PatientPrivacyService::fetchProviders();
+        $this->view->roles = PatientPrivacyService::fetchAllRoles();
         $this->view->title = "Patient Privacy Settings";
     }
 
@@ -195,6 +196,20 @@ class AdminController extends AbstractController
             PatientPrivacyService::deleteAllSupervisors($provider_id);
             foreach ($supervisors as $supervisor_id) {
                 PatientPrivacyService::attachProviderToSupervisor($provider_id, $supervisor_id);
+            }
+        }
+    }
+
+    /**
+     * Set the roles excluded from patient privacy (can see all patients)
+     */
+    public function _action_set_excluded_roles()
+    {
+        $roles = $this->request->getParam('roles');
+        if (is_array($roles)) {
+            PatientPrivacyService::deleteAllExcludedRoles();
+            foreach ($roles as $role_id) {
+                PatientPrivacyService::insertExcludedRole($role_id);
             }
         }
     }

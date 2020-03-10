@@ -60,3 +60,32 @@ ALTER TABLE `mi2_users_supervisors`
 ALTER TABLE `mi2_users_supervisors`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
+--
+-- Table structure for table `mi2_exclude_roles`
+--
+
+CREATE TABLE `mi2_exclude_roles` (
+  `id` bigint(20) NOT NULL,
+  `gid` int(11) NOT NULL COMMENT 'GACL Group ID'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `mi2_exclude_roles`
+--
+ALTER TABLE `mi2_exclude_roles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `mi2_exclude_roles`
+--
+ALTER TABLE `mi2_exclude_roles`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+

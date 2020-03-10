@@ -9,14 +9,19 @@ class PatientPrivacyService
     public static function makeProviderDataTable()
     {
         $dt = DataTable::make(
-            "SELECT id, lname, fname, username FROM users WHERE active = '1'",
+            "SELECT U.id, U.lname, U.fname, U.username, U.active, G.name AS role FROM users U
+            JOIN gacl_aro ARO ON U.username = ARO.value
+            JOIN gacl_groups_aro_map MAP ON ARO.id = MAP.aro_id
+            JOIN gacl_aro_groups G ON MAP.group_id = G.id
+            WHERE U.active = '1'",
             "provider-data-table",
             "/interface/modules/custom_modules/oe-patient-privacy/index.php?action=admin!provider_data",
             new ProviderRowAttributeFilter())
             ->addColumn(["title" => "ID", "field" => "id"])
             ->addColumn(["title" => "Last Name", "field" => "lname"])
             ->addColumn(["title" => "First Name", "field" => "fname"])
-            ->addColumn(["title" => "Username", "field" => "username"]);
+            ->addColumn(["title" => "Username", "field" => "username"])
+            ->addColumn(["title" => "Role", "field" => "role"]);
         return $dt;
     }
 
@@ -103,6 +108,46 @@ class PatientPrivacyService
         }
 
         return $providersForPatient;
+    }
+
+    /**
+     * @return array
+     *
+     * Fetch an array of objects that represent all roles in the system that can
+     * be assigned to users.
+     *
+     * We join with the excluded roles table so we can also return which roles are excluded
+     * from patient privacy.
+     */
+    public static function fetchAllRoles()
+    {
+        $roles = [];
+        $sql = "SELECT G.id, G.name, (MER.id IS NOT NULL) as excluded FROM gacl_aro_groups G
+            LEFT JOIN mi2_exclude_roles MER ON G.id = MER.gid
+            ORDER BY G.id ASC";
+        $result = sqlStatement($sql);
+        while ($row = sqlFetchArray($result)) {
+            $role = new \stdClass();
+            $role->id = $row['id'];
+            $role->title = $row['name'];
+            $role->excluded = $row['excluded'];
+            $roles[] = $role;
+        }
+        return $roles;
+    }
+
+    public static function deleteAllExcludedRoles()
+    {
+        $sql = "DELETE FROM mi2_exclude_roles WHERE 1";
+        $result = sqlStatement($sql);
+        return $result;
+    }
+
+    public static function insertExcludedRole($role_id)
+    {
+        $sql = "INSERT INTO mi2_exclude_roles (gid) VALUES (?)";
+        $result = sqlInsert($sql, [$role_id]);
+        return $result;
     }
 
     public static function fetchProvider($provider_id)

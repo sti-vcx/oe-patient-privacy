@@ -67,9 +67,74 @@ function oe_module_patient_privacy_filter_by_user(PatientFinderFilterEvent $even
 // Our handler will filter out patients that aren't associated with the logged-in users' facility list
 $eventDispatcher->addListener(PatientFinderFilterEvent::EVENT_HANDLE, 'oe_module_patient_privacy_filter_by_user');
 
+/**
+ * @param ViewEvent $event
+ * @return ViewEvent
+ *
+ * Handler for the view event in patient demographics. If the patient is in the logged-in user's
+ * blacklist, they will not have access.
+ */
+function oe_module_patient_privacy_checkUserForViewAuth(\OpenEMR\Events\PatientDemographics\ViewEvent $event)
+{
+    $userService = new \PatientPrivacy\UserService();
+    $user = $userService->getCurrentlyLoggedInUser();
+
+    if (\PatientPrivacy\UserService::isExcluded($user->getId())) {
+        $event->setAuthorized(true);
+    } else {
+
+        $providers = PatientPrivacyService::fetchProvidersForPatient($event->getPid());
+        $supervisors = PatientPrivacyService::fetchSupervisorsForPatient($event->getPid());
+
+        if (in_array($user->getId(), $providers) ||
+            in_array($user->getId(), $supervisors)) {
+            $event->setAuthorized(true);
+        } else {
+            $event->setAuthorized(false);
+        }
+    }
+
+    return $event;
+}
+
 // listen for view and update events on the patient demographics screen (hooks located in
 // interface/patient_file/summary/demogrphics.php and
 // interface/patient_file/summary/demogrphics_full.php
-//$eventDispatcher->addListener(ViewEvent::EVENT_HANDLE, [$this, 'checkUserForViewAuth']);
-//$eventDispatcher->addListener(UpdateEvent::EVENT_HANDLE, [$this, 'checkUserForUpdateAuth']);
+$eventDispatcher->addListener(\OpenEMR\Events\PatientDemographics\ViewEvent::EVENT_HANDLE, 'oe_module_patient_privacy_checkUserForViewAuth');
+
+/**
+ * @param UpdateEvent $event
+ * @return UpdateEvent
+ *
+ * Handler for the update event in patient demographics. If the patient is in the logged-in user's
+ * blacklist, they will not have access.
+ */
+function oe_module_patient_privacy_checkUserForUpdateAuth(\OpenEMR\Events\PatientDemographics\UpdateEvent $event)
+{
+    $patientPrivacyService = new PatientPrivacyService();
+
+    $userService = new \PatientPrivacy\UserService();
+    $user = $userService->getCurrentlyLoggedInUser();
+
+    if (\PatientPrivacy\UserService::isExcluded($user->getId())) {
+        $event->setAuthorized(true);
+    } else {
+        $providers = PatientPrivacyService::fetchProvidersForPatient($event->getPid());
+        $supervisors = PatientPrivacyService::fetchSupervisorsForPatient($event->getPid());
+
+        if (in_array($user->getId(), $providers) ||
+            in_array($user->getId(), $supervisors)) {
+            $event->setAuthorized(true);
+        } else {
+            $event->setAuthorized(false);
+        }
+    }
+
+    return $event;
+}
+
+// listen for view and update events on the patient demographics screen (hooks located in
+// interface/patient_file/summary/demogrphics.php and
+// interface/patient_file/summary/demogrphics_full.php
+$eventDispatcher->addListener(\OpenEMR\Events\PatientDemographics\UpdateEvent::EVENT_HANDLE, 'oe_module_patient_privacy_checkUserForUpdateAuth');
 
