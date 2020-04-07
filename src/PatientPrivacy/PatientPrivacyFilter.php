@@ -34,7 +34,7 @@ class PatientPrivacyFilter
 
                 SELECT PD.pid FROM patient_data PD
                 JOIN mi2_users_patients MUP ON PD.pid = MUP.pid
-                JOIN mi2_users_supervisors MUS ON MUP.user_id = MUS.super_user_id
+                JOIN mi2_users_supervisors MUS ON MUP.user_id = MUS.user_id
                 WHERE MUS.super_user_id = ?
                 GROUP BY pid
                 ) T GROUP BY pid
