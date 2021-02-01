@@ -52,7 +52,7 @@ function oe_module_patient_privacy_filter_by_user(PatientFinderFilterEvent $even
 {
     $userService = new \OpenEMR\Services\UserService();
     $user = $userService->getCurrentlyLoggedInUser();
-    $patientPrivacyFilter = PatientPrivacyService::getPrivacyFilterForUser($user->getId());
+    $patientPrivacyFilter = PatientPrivacyService::getPrivacyFilterForUser($user['id']);
 
     // Get filter obj from our event, and by default, don't show any patients
     $boundFilter = $event->getBoundFilter();
@@ -79,15 +79,15 @@ function oe_module_patient_privacy_checkUserForViewAuth(\OpenEMR\Events\PatientD
     $userService = new \PatientPrivacy\UserService();
     $user = $userService->getCurrentlyLoggedInUser();
 
-    if (\PatientPrivacy\UserService::isExcluded($user->getId())) {
+    if (\PatientPrivacy\UserService::isExcluded($user['id'])) {
         $event->setAuthorized(true);
     } else {
 
         $providers = PatientPrivacyService::fetchProvidersForPatient($event->getPid());
         $supervisors = PatientPrivacyService::fetchSupervisorsForPatient($event->getPid());
 
-        if (in_array($user->getId(), $providers) ||
-            in_array($user->getId(), $supervisors)) {
+        if (in_array($user['id'], $providers) ||
+            in_array($user['id'], $supervisors)) {
             $event->setAuthorized(true);
         } else {
             $event->setAuthorized(false);
@@ -122,8 +122,8 @@ function oe_module_patient_privacy_checkUserForUpdateAuth(\OpenEMR\Events\Patien
         $providers = PatientPrivacyService::fetchProvidersForPatient($event->getPid());
         $supervisors = PatientPrivacyService::fetchSupervisorsForPatient($event->getPid());
 
-        if (in_array($user->getId(), $providers) ||
-            in_array($user->getId(), $supervisors)) {
+        if (in_array($user['id'], $providers) ||
+            in_array($user['id'], $supervisors)) {
             $event->setAuthorized(true);
         } else {
             $event->setAuthorized(false);

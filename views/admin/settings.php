@@ -7,17 +7,8 @@ use OpenEMR\OeUI\OemrUI;
 
 ?>
 <head>
-    <?php Header::setupHeader(); ?>
+    <?php Header::setupHeader(['bootstrap', 'datatables', 'datatables-colreorder', 'datatables-bs', 'datatables-dt']); ?>
     <title><?php echo $this->title ?></title>
-    <link rel="stylesheet"
-          href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-dt/css/jquery.dataTables.css"
-          type="text/css">
-    <link rel="stylesheet"
-          href="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net-colreorder-dt/css/colReorder.dataTables.css"
-          type="text/css">
-    <script type="text/javascript"
-            src="<?php echo $GLOBALS['assets_static_relative']; ?>/datatables.net/js/jquery.dataTables.js"></script>
-
     <style>
         #addressbook_list a:visited, a, a:visited {
             color: #337ab7;
@@ -73,10 +64,16 @@ use OpenEMR\OeUI\OemrUI;
         <?php } ?>
     </div>
 
-    <ul id="tabs" class="nav nav-tabs">
-        <li role="presentation" class="active"><a id="patient-tab" data-toggle="tab" href="#patients">Patients</a></li>
-        <li role="presentation"><a id="provider-tab" data-toggle="tab" href="#providers">Users</a></li>
-        <li role="presentation"><a id="roles-tab" data-toggle="tab" href="#roles">Roles</a></li>
+    <ul id="tabs" class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="nav-item">
+            <a class="nav-link active" id="patient-tab" data-toggle="tab" href="#patients">Patients</a>
+        </li>
+        <li role="presentation" class="nav-item">
+            <a class="nav-link" id="provider-tab" data-toggle="tab" href="#providers">Users</a>
+        </li>
+        <li role="presentation" class="nav-item">
+            <a class="nav-link" id="roles-tab" data-toggle="tab" href="#roles">Roles</a>
+        </li>
     </ul>
 
     <!-- Tab panes -->
@@ -84,7 +81,7 @@ use OpenEMR\OeUI\OemrUI;
         <div role="tabpanel" class="tab-pane active" id="patients">
 
             <div class="row">
-                <form class="form-inline" action="<?php echo $GLOBALS['webroot'] ?>/interface/perfecttranscription/index.php">
+                <form class="form-inline" action="javascript;">
                     <div class="form-group">
                         <label for="provider-filter-select">Filter by Provider</label>
                         <select name="provider-filter-select" id="filter-by-provider" class="form-control">
@@ -182,18 +179,22 @@ use OpenEMR\OeUI\OemrUI;
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Provider Access</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <form id="patient-privacy-form">
 
-                    <input id="currently-active-pid" type="hidden" value="" name="pid">
+                    <input id="currently-active-pid" type="hidden" value="" name="pid" role="tablist">
 
                     <!-- Tabs within patient privacy modal -->
                     <ul id="provider-access-tabs" class="nav nav-tabs">
-                        <li role="presentation" class="active"><a id="direct-access" data-toggle="tab" href="#direct-access-tab">Direct Access</a></li>
-                        <li role="presentation"><a id="supervisor-access" data-toggle="tab" href="#supervisor-access-tab">Access via Supervisor</a></li>
+                        <li class="nav-item active" role="presentation">
+                            <a class="nav-link" id="direct-access" data-toggle="tab" href="#direct-access-tab">Direct Access</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="supervisor-access" data-toggle="tab" href="#supervisor-access-tab">Access via Supervisor</a>
+                        </li>
                     </ul>
 
                     <div class="tab-content" style="padding-top: 20px;">
@@ -250,8 +251,8 @@ use OpenEMR\OeUI\OemrUI;
         <div class="modal-content">
 
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Supervisor Relationships for <span id="selected-provider"></span></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <form id="attach-provider-to-supervisor-form">
@@ -277,8 +278,8 @@ use OpenEMR\OeUI\OemrUI;
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="attach-patient-to-provider-modal-label">Attach Patient to Provider</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <h3>Patient</h3>
