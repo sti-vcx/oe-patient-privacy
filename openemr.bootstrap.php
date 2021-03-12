@@ -116,7 +116,7 @@ function oe_module_patient_privacy_checkUserForUpdateAuth(\OpenEMR\Events\Patien
     $userService = new \PatientPrivacy\UserService();
     $user = $userService->getCurrentlyLoggedInUser();
 
-    if (\PatientPrivacy\UserService::isExcluded($user->getId())) {
+    if (\PatientPrivacy\UserService::isExcluded($user['id'])) {
         $event->setAuthorized(true);
     } else {
         $providers = PatientPrivacyService::fetchProvidersForPatient($event->getPid());
