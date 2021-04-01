@@ -168,6 +168,30 @@ class PatientPrivacyService
         return $patient;
     }
 
+    public static function userHasAccess($userId, $pid): bool
+    {
+        $hasAccess = false;
+        $providers = PatientPrivacyService::fetchProvidersForPatient($pid);
+        foreach ($providers as $provider) {
+            if ($provider['id'] == $userId && $provider['has_access'] == 1) {
+                $hasAccess = true;
+                break;
+            }
+        }
+
+        if ($hasAccess == false) {
+            $supervisors = PatientPrivacyService::fetchSupervisorsForPatient($pid);
+            foreach ($supervisors as $supervisor) {
+                if ($supervisor['supervisor_id'] == $userId) {
+                    $hasAccess = true;
+                    break;
+                }
+            }
+        }
+
+        return $hasAccess;
+    }
+
     /**
      * @param $pid
      *

@@ -82,12 +82,8 @@ function oe_module_patient_privacy_checkUserForViewAuth(\OpenEMR\Events\PatientD
     if (\PatientPrivacy\UserService::isExcluded($user['id'])) {
         $event->setAuthorized(true);
     } else {
-
-        $providers = PatientPrivacyService::fetchProvidersForPatient($event->getPid());
-        $supervisors = PatientPrivacyService::fetchSupervisorsForPatient($event->getPid());
-
-        if (in_array($user['id'], $providers) ||
-            in_array($user['id'], $supervisors)) {
+        // Check to see if this user has access to this patient by direct or supervisor relationship
+        if (PatientPrivacyService::userHasAccess($user['id'], $event->getPid())) {
             $event->setAuthorized(true);
         } else {
             $event->setAuthorized(false);
@@ -119,11 +115,8 @@ function oe_module_patient_privacy_checkUserForUpdateAuth(\OpenEMR\Events\Patien
     if (\PatientPrivacy\UserService::isExcluded($user['id'])) {
         $event->setAuthorized(true);
     } else {
-        $providers = PatientPrivacyService::fetchProvidersForPatient($event->getPid());
-        $supervisors = PatientPrivacyService::fetchSupervisorsForPatient($event->getPid());
 
-        if (in_array($user['id'], $providers) ||
-            in_array($user['id'], $supervisors)) {
+        if (PatientPrivacyService::userHasAccess($user['id'], $event->getPid())) {
             $event->setAuthorized(true);
         } else {
             $event->setAuthorized(false);
