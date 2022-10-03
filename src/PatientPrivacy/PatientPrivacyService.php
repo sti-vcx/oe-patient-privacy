@@ -2,7 +2,7 @@
 
 namespace PatientPrivacy;
 
-use Mi2\DataTable\DataTable;
+use Sti\DataTable\DataTable;
 
 class PatientPrivacyService
 {

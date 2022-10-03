@@ -4,7 +4,7 @@
 namespace PatientPrivacy;
 
 
-use Mi2\DataTable\RowAttributeFilterIF;
+use Sti\DataTable\RowAttributeFilterIF;
 
 class ProviderRowAttributeFilter implements RowAttributeFilterIF
 {

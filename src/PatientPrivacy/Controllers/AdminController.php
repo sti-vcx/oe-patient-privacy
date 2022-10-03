@@ -8,9 +8,9 @@
 
 namespace PatientPrivacy\Controllers;
 
-use Mi2\DataTable\SearchFilter;
-use Mi2\Framework\AbstractController;
-use Mi2\Framework\Response;
+use Sti\DataTable\SearchFilter;
+use Sti\Framework\AbstractController;
+use Sti\Framework\Response;
 use PatientPrivacy\PatientPrivacyService;
 
 class AdminController extends AbstractController
