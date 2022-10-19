@@ -12,7 +12,7 @@ class UserService extends \OpenEMR\Services\UserService
           JOIN gacl_aro ARO ON U.username = ARO.value
           JOIN gacl_groups_aro_map MAP ON ARO.id = MAP.aro_id
           JOIN gacl_aro_groups G ON MAP.group_id = G.id
-          WHERE G.id IN ( SELECT gid FROM mi2_exclude_roles ) AND U.id = ? LIMIT 1";
+          WHERE G.id IN ( SELECT gid FROM sti_exclude_roles ) AND U.id = ? LIMIT 1";
         $result = sqlQuery($sql, [$userId]);
         if ($result) {
             return true;

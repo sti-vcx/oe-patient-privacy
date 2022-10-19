@@ -33,14 +33,14 @@ class PatientPrivacyService
                 FROM (
                     SELECT U.id AS provider_id, CONCAT(U.lname, ', ', U.fname) AS provider, PD.lname, PD.fname, PD.DOB, PD.pid
                     FROM patient_data PD
-                    LEFT JOIN mi2_users_patients MUP ON PD.pid = MUP.pid
+                    LEFT JOIN sti_users_patients MUP ON PD.pid = MUP.pid
                     LEFT JOIN users U on U.id = MUP.user_id
                     GROUP BY PD.pid
                     UNION ALL
                     SELECT S.id AS provider_id, CONCAT(S.lname, ', ', S.fname) AS provider, PD.lname, PD.fname, PD.DOB, PD.pid
                     FROM patient_data PD
-                    LEFT JOIN mi2_users_patients MUP ON PD.pid = MUP.pid
-                    LEFT JOIN mi2_users_supervisors MUS ON MUP.user_id = MUS.user_id
+                    LEFT JOIN sti_users_patients MUP ON PD.pid = MUP.pid
+                    LEFT JOIN sti_users_supervisors MUS ON MUP.user_id = MUS.user_id
                     LEFT JOIN users S ON S.id = MUS.super_user_id
                     GROUP BY PD.pid
                 ) T",
@@ -59,21 +59,21 @@ class PatientPrivacyService
 
     public static function attachPatientToProvider($patientId, $providerId)
     {
-        $sql = "REPLACE INTO mi2_users_patients (pid, user_id) VALUES (?,?)";
+        $sql = "REPLACE INTO sti_users_patients (pid, user_id) VALUES (?,?)";
         $result = sqlInsert($sql, [$patientId, $providerId]);
         return $result;
     }
 
     public static function deleteAllSupervisors($provider_id)
     {
-        $sql = "DELETE FROM mi2_users_supervisors WHERE user_id = ?";
+        $sql = "DELETE FROM sti_users_supervisors WHERE user_id = ?";
         $result = sqlStatement($sql, [$provider_id]);
         return $result;
     }
 
     public static function deleteAllProviderAccess($pid)
     {
-        $sql = "DELETE FROM mi2_users_patients WHERE pid = ?";
+        $sql = "DELETE FROM sti_users_patients WHERE pid = ?";
         $result = sqlStatement($sql, [$pid]);
         return $result;
     }
@@ -82,14 +82,14 @@ class PatientPrivacyService
     {
         // We use REPLACE because we have a unique index on user_id/super_user_id combos
         // This way, we won't have duplicate entries
-        $sql = "REPLACE INTO mi2_users_supervisors (user_id, super_user_id) VALUES (?,?)";
+        $sql = "REPLACE INTO sti_users_supervisors (user_id, super_user_id) VALUES (?,?)";
         $result = sqlInsert($sql, [$providerId, $supervisorId]);
         return $result;
     }
 
     public static function detachProviderFromSupervisor($providerId, $supervisorId)
     {
-        $sql = "DELETE FROM mi2_users_supervisors WHERE user_id = ? AND super_user_id = ?";
+        $sql = "DELETE FROM sti_users_supervisors WHERE user_id = ? AND super_user_id = ?";
         $result = sqlStatement($sql, [$providerId, $supervisorId]);
         return $result;
     }
@@ -123,7 +123,7 @@ class PatientPrivacyService
     {
         $roles = [];
         $sql = "SELECT G.id, G.name, (MER.id IS NOT NULL) as excluded FROM gacl_aro_groups G
-            LEFT JOIN mi2_exclude_roles MER ON G.id = MER.gid
+            LEFT JOIN sti_exclude_roles MER ON G.id = MER.gid
             ORDER BY G.id ASC";
         $result = sqlStatement($sql);
         while ($row = sqlFetchArray($result)) {
@@ -138,14 +138,14 @@ class PatientPrivacyService
 
     public static function deleteAllExcludedRoles()
     {
-        $sql = "DELETE FROM mi2_exclude_roles WHERE 1";
+        $sql = "DELETE FROM sti_exclude_roles WHERE 1";
         $result = sqlStatement($sql);
         return $result;
     }
 
     public static function insertExcludedRole($role_id)
     {
-        $sql = "INSERT INTO mi2_exclude_roles (gid) VALUES (?)";
+        $sql = "INSERT INTO sti_exclude_roles (gid) VALUES (?)";
         $result = sqlInsert($sql, [$role_id]);
         return $result;
     }
@@ -204,7 +204,7 @@ class PatientPrivacyService
     {
         $sql = "SELECT CONCAT(U.lname, ', ', U.fname) AS name, U.id, (MUP.pid IS NOT NULL) AS has_access
             FROM users U
-            LEFT OUTER JOIN mi2_users_patients MUP ON MUP.user_id = U.id AND MUP.pid = ?
+            LEFT OUTER JOIN sti_users_patients MUP ON MUP.user_id = U.id AND MUP.pid = ?
             WHERE U.active = '1'
             ORDER BY U.lname";
 
@@ -227,10 +227,10 @@ class PatientPrivacyService
     public static function fetchSupervisorsForPatient($pid)
     {
         $sql = "SELECT CONCAT(U.lname, ', ', U.fname) AS provider_name, CONCAT(S.lname, ', ',S.fname) AS supervisor_name, MUS.super_user_id AS supervisor_id, MUS.user_id AS provider_id
-            FROM mi2_users_supervisors AS MUS
+            FROM sti_users_supervisors AS MUS
             JOIN users U ON U.id = MUS.user_id
             JOIN users S ON S.id = MUS.super_user_id
-            JOIN mi2_users_patients MUP ON MUP.user_id = U.id AND MUP.pid = ?
+            JOIN sti_users_patients MUP ON MUP.user_id = U.id AND MUP.pid = ?
             WHERE S.active = '1'";
 
         $supervisorsForPatient = [];
@@ -253,7 +253,7 @@ class PatientPrivacyService
     {
         $sql = "SELECT CONCAT(U.lname, ', ', U.fname) AS name, U.id, (MUS.super_user_id IS NOT NULL) AS is_supervisor
             FROM users U
-            LEFT OUTER JOIN mi2_users_supervisors MUS ON MUS.user_id = ? AND MUS.super_user_id = U.id
+            LEFT OUTER JOIN sti_users_supervisors MUS ON MUS.user_id = ? AND MUS.super_user_id = U.id
             WHERE U.active = '1'
             ORDER BY U.lname";
 

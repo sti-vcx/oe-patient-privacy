@@ -26,15 +26,15 @@ class PatientPrivacyFilter
             $sql = "SELECT pid
             FROM (
                 SELECT PD.pid FROM patient_data PD
-                JOIN mi2_users_patients MUP ON PD.pid = MUP.pid
+                JOIN sti_users_patients MUP ON PD.pid = MUP.pid
                 WHERE MUP.user_id = ?
                 GROUP BY pid
 
                 UNION ALL
 
                 SELECT PD.pid FROM patient_data PD
-                JOIN mi2_users_patients MUP ON PD.pid = MUP.pid
-                JOIN mi2_users_supervisors MUS ON MUP.user_id = MUS.user_id
+                JOIN sti_users_patients MUP ON PD.pid = MUP.pid
+                JOIN sti_users_supervisors MUS ON MUP.user_id = MUS.user_id
                 WHERE MUS.super_user_id = ?
                 GROUP BY pid
                 ) T GROUP BY pid
